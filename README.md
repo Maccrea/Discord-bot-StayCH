@@ -1,74 +1,74 @@
 # 🤖 StayCH - Discord Voice Stay Bot
 
-**StayCH** adalah bot Discord sederhana dan ringan yang dirancang untuk masuk dan "menetap" di dalam Voice Channel (VC). Bot ini berguna untuk membuat server terlihat ramai, menemani user, atau sekadar menjaga agar room tidak kosong.
+**StayCH** is a simple and lightweight Discord bot designed to join and "stay" in a Voice Channel (VC). It's useful for making servers look active, keeping users company, or simply preventing voice channels from being empty.
 
-Dibuat menggunakan **Discord.js v14** dan **@discordjs/voice**.
-
----
-
-## ✨ Fitur Utama
-
-* **🚀 Perintah Simpel**: Cukup ketik `!masuk` atau `!keluar`.
-* **🎯 Target Fleksibel**: Bisa masuk ke room tempat kamu berada, ATAU masuk ke room tertentu menggunakan ID.
-* **🛡️ Anti-Crash**: Dilengkapi dengan *uncaughtException handler* agar bot tidak mati total jika ada error kecil.
-* **🔊 Status Aktif**: Bot bergabung tanpa status "Deafen" atau "Mute" (bisa diubah di codingan).
+Built using **Discord.js v14** and **@discordjs/voice**.
 
 ---
 
-## 📋 Daftar Perintah (Commands)
+## ✨ Key Features
 
-Prefix default adalah `!`
+* **🚀 Simple Commands**: Just type `!join` or `!leave`.
+* **🎯 Flexible Targeting**: Can join your current channel OR a specific channel via ID.
+* **🛡️ Anti-Crash**: Equipped with an *uncaughtException handler* to prevent the bot from crashing due to minor errors.
+* **🔊 Active Status**: The bot joins without "Deafen" or "Mute" status (configurable in the code).
 
-| Perintah | Alias | Fungsi |
+---
+
+## 📋 Commands
+
+Default prefix is `!`
+
+| Command | Alias | Function |
 | :--- | :--- | :--- |
-| `!masuk` | `!join` | Memasukkan bot ke Voice Channel tempat kamu berada saat ini. |
-| `!masuk <ID>` | `!join <ID>` | Memasukkan bot ke Voice Channel spesifik berdasarkan ID Channel. |
-| `!keluar` | `!leave` | Menyuruh bot keluar/disconnect dari Voice Channel. |
+| `!join` | `!masuk` | Joins the Voice Channel you are currently in. |
+| `!join <ID>` | `!masuk <ID>` | Joins a specific Voice Channel using its Channel ID. |
+| `!leave` | `!keluar` | Disconnects the bot from the Voice Channel. |
 
-**Contoh Penggunaan:**
-* `!masuk` (Kamu harus ada di VC dulu)
-* `!masuk 123456789012345` (Bot akan masuk ke channel ID tersebut)
+**Usage Examples:**
+* `!join` (You must be in a VC first)
+* `!join 123456789012345` (Bot will join this specific Channel ID)
 
 ---
 
-## 🛠️ Instalasi & Cara Pakai
+## 🛠️ Installation & Setup
 
-Ikuti langkah ini untuk menjalankannya di komputer atau VPS kamu.
+Follow these steps to run the bot on your computer or VPS.
 
-### 1. Persiapan (Prerequisites)
-* **Node.js** (Versi 16.9.0 ke atas).
-* **Bot Token** (Dari Discord Developer Portal).
+### 1. Prerequisites
+* **Node.js** (Version 16.9.0 or higher).
+* **Bot Token** (From Discord Developer Portal).
 
 ### 2. Clone Repository
 ```bash
-git clone https://github.com/username-kamu/StayCH.git
+git clone [https://github.com/your-username/StayCH.git](https://github.com/your-username/StayCH.git)
 cd StayCH
 ```
 
 ### 3. Install Dependencies
-Bot ini membutuhkan library `discord.js`, voice adapter, dan library enkripsi suara (`libsodium`).
+This bot requires `discord.js`, the voice adapter, and an audio encryption library (`libsodium`).
 
 ```bash
 npm install discord.js @discordjs/voice dotenv libsodium-wrappers
 ```
 
-### 4. Konfigurasi Token
-Buat file baru bernama `.env` di folder proyek kamu. Isi dengan token bot kamu:
+### 4. Configure Token
+Create a new file named `.env` in your project folder. Add your bot token inside:
 
 ```env
-TOKEN=masukkan_token_bot_disini_tanpa_spasi
+TOKEN=your_bot_token_here_without_spaces
 ```
 
-### 5. Jalankan Bot
+### 5. Run the Bot
 ```bash
 node index.js
 ```
 
-Jika berhasil, akan muncul pesan di terminal:
+If successful, you will see a message in the terminal:
 ```text
 ✅ BOT ONLINE: StayCH#1234
-👉 Cara pakai:
-   1. !masuk (Bot masuk ke room kamu)
+👉 Usage:
+   1. !masuk (Bot joins your room)
    ...
 ```
 
@@ -76,17 +76,17 @@ Jika berhasil, akan muncul pesan di terminal:
 
 ## ⚠️ Troubleshooting
 
-**Q: Bot masuk tapi langsung keluar lagi?**
-A: Pastikan kamu sudah menginstall `libsodium-wrappers` atau `sodium-native`. Discord Voice butuh library enkripsi ini.
+**Q: The bot joins but leaves immediately?**
+A: Ensure you have installed `libsodium-wrappers` or `sodium-native`. Discord Voice requires this encryption library to function.
 `npm install libsodium-wrappers`
 
-**Q: Bot tidak merespon perintah?**
+**Q: The bot is not responding to commands?**
 A:
-1. Pastikan Bot sudah on (online).
-2. Cek **Privileged Gateway Intents** di Discord Developer Portal. Pastikan **"Message Content Intent"** sudah dicentang (ON).
-3. Pastikan bot punya izin **View Channel** dan **Connect** di server Discord.
+1. Make sure the Bot is online.
+2. Check **Privileged Gateway Intents** in the Discord Developer Portal. Ensure **"Message Content Intent"** is toggled **ON**.
+3. Ensure the bot has **View Channel** and **Connect** permissions in your Discord server.
 
 ---
 
 ## 📜 License
-Project ini open-source. Bebas digunakan dan dimodifikasi
+This project is open-source. Feel free to use and modify it.
