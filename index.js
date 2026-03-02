@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
-const { joinVoiceChannel, getVoiceConnection } = require('@discordjs/voice');
+const { joinVoiceChannel, getVoiceConnection, VoiceConnectionStatus, entersState } = require('@discordjs/voice');
 
 const client = new Client({
     intents: [
@@ -15,7 +15,11 @@ const client = new Client({
 const PREFIX = "!"; 
 
 process.on('uncaughtException', (err) => {
-    console.log('⚠️ Error dikit, tapi aman:', err.message);
+    console.log('⚠️ Error dikit (uncaughtException):', err.message);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('⚠️ Error dikit (unhandledRejection):', reason);
 });
 
 client.on('ready', () => {
@@ -23,14 +27,12 @@ client.on('ready', () => {
     console.log(`-------------------------------------------`);
 });
 
-// --- FITUR UTAMA (COMMAND) ---
 client.on('messageCreate', async (message) => {
     if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
     const args = message.content.slice(PREFIX.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
-    // 1. COMMAND MASUK
     if (command === 'masuk' || command === 'join') {
         let channelTarget;
 
@@ -49,12 +51,25 @@ client.on('messageCreate', async (message) => {
         console.log(`[CMD] ${message.author.tag} menyuruh bot MASUK ke: ${channelTarget.name}`);
 
         try {
-            joinVoiceChannel({
+            const connection = joinVoiceChannel({
                 channelId: channelTarget.id,
                 guildId: channelTarget.guild.id,
                 adapterCreator: channelTarget.guild.voiceAdapterCreator,
                 selfDeaf: false,
                 selfMute: false
+            });
+
+            connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+                try {
+                    await Promise.race([
+                        entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
+                        entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
+                    ]);
+                    console.log(`[INFO] Berhasil reconnect ke ${channelTarget.name}`);
+                } catch (error) {
+                    console.log(`⚠️ Koneksi terputus dari ${channelTarget.name} dan gagal menyambung kembali.`);
+                    connection.destroy();
+                }
             });
             
             message.reply(`✅ Siap! Otw masuk ke **${channelTarget.name}**! 🏃‍♂️💨`);
@@ -77,7 +92,6 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    // 2. COMMAND KELUAR
     if (command === 'keluar' || command === 'leave') {
         console.log(`[CMD] ${message.author.tag} menyuruh bot KELUAR.`);
 
@@ -88,18 +102,11 @@ client.on('messageCreate', async (message) => {
             return message.reply("Oke, gua cabut. 👋");
         }
         
-        const botVoice = message.guild.members.me.voice;
-        if (botVoice.channel) {
-            await botVoice.disconnect();
-            return message.reply("Oke, dipaksa keluar. 👋");
-        }
-
         message.reply("Gua lagi gak di dalem room manapun.");
     }
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-    // Cek apakah bot sedang connect di server ini?
     const connection = getVoiceConnection(newState.guild.id || oldState.guild.id);
     if (!connection) return;
 
